@@ -72,13 +72,15 @@ const LogoRender = () => {
                 <option value={3}>3</option>
                 </select>
 
+                <div className="flex flex-col items-center">
                 <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-md py-2 px-4 mt-4 w-96"
-                disabled={isLoading}
+                    type="submit"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-md py-2 px-4 mt-4 w-96"
+                    disabled={isLoading}
                 >
-                {isLoading ? "Generating..." : "Generate Logos"}
+                    {isLoading ? "Generating..." : "Generate Logos"}
                 </button>
+                </div>
             </form>
 
             {imageUrls && imageUrls.length > 0 && (
@@ -99,7 +101,6 @@ const LogoRender = () => {
                 </div>
             )}
         </>
-
     );
 }
 

@@ -70,18 +70,20 @@ const PackageRender = () => {
                 onChange={handleNumImagesChange}
                 required
                 >
-                    <option value={1}>1</option>
-                    <option value={2}>2</option>
-                    <option value={3}>3</option>
+                <option value={1}>1</option>
+                <option value={2}>2</option>
+                <option value={3}>3</option>
                 </select>
 
+                <div className="flex flex-col">
                 <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-md py-2 px-4 mt-4 w-96"
-                disabled={isLoading}
+                    type="submit"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-md py-2 px-4 mt-4 w-96 mx-auto"
+                    disabled={isLoading}
                 >
-                {isLoading ? "Generating..." : "Generate Packaging"}
+                    {isLoading ? "Generating..." : "Generate Packaging"}
                 </button>
+                </div>
             </form>
 
             {imageUrls && imageUrls.length > 0 && (
@@ -102,7 +104,6 @@ const PackageRender = () => {
                 </div>
             )}
         </>
-
     );
 }
 
