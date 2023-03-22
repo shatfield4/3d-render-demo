@@ -83,7 +83,9 @@ const LogoRender = () => {
             <option value={3}>3</option>
             </select>
         </div>
-
+        <p className="alert notice error mt-4 block p-3 border border-white rounded-lg text-white mb-0">
+            <strong>NOTE:</strong> {`Describe your product in a way that is easy to understand. For example, "A red apple" is better than "A fruit that is red and round".`}
+        </p>
         <div className="flex flex-col items-center mt-4">
             <button
             type="submit"
