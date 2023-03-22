@@ -15,16 +15,16 @@ export default async function handler(
 
     let prompt;
     if (req.body.prompt === "logo") {
-        prompt = "3d logo render for a brand that is aesthetic looking and professional and ";
+        prompt = `Generate a unique and visually appealing 3d geometric shape suitable for e-commerce brand logos based on the user's description: ${req.body.inputText}. Ensure that the shapes are interesting, modern, and have space for text to be incorporated into the design. cinematic lighting, octane, 3d render, 4k, 8k, Relaxing:: Additive::0 --ar 16:9`;
 
     } else if (req.body.prompt === "package") {
-        prompt = "3d package render for a brand that is aesthetic looking and professional and ";
+        prompt = `Create 3D hyperrealistic packaging renders for ${req.body.inputText} suitable for e-commerce product listings. octane, 3d render, 4k, 8k, Relaxing:: Additive::0 --ar 16:9`;
     }
 
     try {
         const response = await axios.post(DALLE_API_ENDPOINT!, {
             model: "image-alpha-001",
-            prompt: prompt + req.body.inputText,
+            prompt: prompt,
             num_images: req.body.numImages,
         }, {
             headers: {

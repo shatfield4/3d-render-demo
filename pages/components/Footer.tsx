@@ -1,14 +1,14 @@
 const Footer = () => {
     return (
-        <footer className="flex items-center justify-center w-full h-24 border-t">
+        <footer className="flex items-center justify-center  border-neutral-800 w-full h-16">
         <a
-          className="flex items-center justify-center"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+          className="flex items-center justify-center bg-black text-white px-4 py-2 rounded-md text-sm font-medium"
+          href="https://openai.com"
           target="_blank"
           rel="noopener noreferrer"
         >
           Powered by{" "}
-          <img src="/vercel.svg" alt="Vercel Logo" className="h-4 ml-2" />
+          <img src="/OpenAI_Logo.svg" alt="Vercel Logo" className="h-4 ml-2 invert" />
         </a>
       </footer>
     );

@@ -1,108 +1,116 @@
 import axios from "axios";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 
 const LogoRender = () => {
-    const [inputText, setInputText] = useState("");
-    const [numImages, setNumImages] = useState(1);
-    const [isLoading, setIsLoading] = useState(false);
-    const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [inputText, setInputText] = useState("");
+  const [numImages, setNumImages] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInputText(event.target.value);
+  useEffect(() => {
+    const fetchImages = async () => {
+      const apiUrl = `https://pixabay.com/api/?key=34623498-875357acb06f0a2e0d4579a7f&q=nature&image_type=photo&per_page=5`;
+      const response = await fetch(apiUrl);
+      const imagesData = await response.json();
+      setImageUrls(imagesData.hits.map((image:any) => image.webformatURL));
     };
 
-    const handleNumImagesChange = (
-        event: React.ChangeEvent<HTMLSelectElement>
-    ) => {
-        setNumImages(Number(event.target.value));
-    };
+    fetchImages();
+  }, []);
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setIsLoading(true);
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputText(event.target.value);
+  };
 
-        try {
-            const response = await axios.post('/api/ai', {
-                prompt: 'logo',
-                inputText: inputText,
-                numImages: numImages
-            });
+  const handleNumImagesChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setNumImages(Number(event.target.value));
+  };
 
-            const imageUrls:string[] = response.data.imageUrls;
-            setImageUrls(imageUrls);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsLoading(true);
 
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-    return (
-        <>
-            <h1 className="text-4xl sm:text-6xl font-bold mb-8">
-                3D <span className="text-blue-500">Logo</span> Render
-            </h1>
+    try {
+      const response = await axios.post("/api/ai", {
+        prompt: "logo",
+        inputText: inputText,
+        numImages: numImages,
+      });
 
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="input-text" className="font-bold block mb-2">
-                Describe your logo:
-                </label>
-                <input
-                type="text"
-                id="input-text"
-                className="border-2 border-gray-400 rounded-md p-2 w-96"
-                value={inputText}
-                onChange={handleInputChange}
-                required
-                />
+      const newImageUrls: string[] = response.data.imageUrls;
+      setImageUrls([...newImageUrls, ...imageUrls]);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  return (
+  <div className="flex min-h-screen">
+    <div className="w-full sm:w-1/3 bg-black p-8 rounded-xl">
+      <h2 className="text-white text-3xl font-bold mb-4 text-left">3D <span className=" text-amber-300">Logo</span> Generation</h2>
 
-                <label htmlFor="num-images" className="font-bold block mt-4 mb-2">
-                Number of logos:
-                </label>
-                <select
-                id="num-images"
-                className="border-2 border-gray-400 rounded-md p-2 w-96"
-                value={numImages}
-                onChange={handleNumImagesChange}
-                required
-                >
-                <option value={1}>1</option>
-                <option value={2}>2</option>
-                <option value={3}>3</option>
-                </select>
+      <form onSubmit={handleSubmit} className="text-left">
+        <div className="mb-4">
+            <label htmlFor="input-text" className="  font-semibold text-white block mb-2">
+            DESCRIBE YOUR LOGO
+            </label>
+            <input
+            type="text"
+            id="input-text"
+            className="bg-neutral-900 text-white rounded-xl p-2 w-full border-neutral-600 border-2 focus:border-orange-500 focus:outline-none"
+            value={inputText}
+            onChange={handleInputChange}
+            required
+            />
+        </div>
 
-                <div className="flex flex-col items-center">
-                <button
-                    type="submit"
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-md py-2 px-4 mt-4 w-96"
-                    disabled={isLoading}
-                >
-                    {isLoading ? "Generating..." : "Generate Logos"}
-                </button>
-                </div>
-            </form>
+        <div className="mb-4">
+            <label htmlFor="num-images" className="font-semibold text-white block mb-2">
+            NUMBER OF LOGOS
+            </label>
+            <select
+            id="num-images"
+            className="bg-neutral-900 text-white rounded-xl p-2 w-full border-neutral-600 border-2 focus:border-orange-500 focus:outline-none"
+            value={numImages}
+            onChange={handleNumImagesChange}
+            required
+            >
+            <option value={1}>1</option>
+            <option value={2}>2</option>
+            <option value={3}>3</option>
+            </select>
+        </div>
 
-            {imageUrls && imageUrls.length > 0 && (
-                <div className="mt-8">
-                <h2 className="text-2xl font-bold mb-4">
-                    Generated Logos:
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {imageUrls.map((imageUrl, index) => (
-                    <img
-                        key={index}
-                        src={imageUrl}
-                        alt={`Generated Image ${index + 1}`}
-                        className="w-full h-auto"
-                    />
-                    ))}
-                </div>
-                </div>
-            )}
-        </>
-    );
-}
+        <div className="flex flex-col items-center mt-4">
+            <button
+            type="submit"
+            className="text-white font-bold rounded-xl py-2 px-4 mt-4 w-full mx-auto text-lg bg-gradient-to-r from-purple-700 via-pink-500 to-red-500 border border-transparent cursor-pointer gradient-animation hover:outline"
+            disabled={isLoading}
+            >
+            {isLoading ? "Generating..." : "Generate Logos"}
+            </button>
+        </div>
+    </form>
 
+    </div>
+    <div className="w-full sm:w-2/3 p-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {imageUrls.map((imageUrl, index) => (
+          <img
+            key={index}
+            src={imageUrl}
+            alt={`Stock Image ${index + 1}`}
+            className="w-full h-auto object-cover rounded-xl shadow-md"
+          />
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+};
 
 export default LogoRender;
