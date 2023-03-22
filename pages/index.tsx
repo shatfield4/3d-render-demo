@@ -5,7 +5,6 @@ import PackageRender from "./components/PackageRender";
 import Footer from "./components/Footer";
 import LogoRender from "./components/LogoRender";
 import Navbar from "./components/Navbar";
-import Dashboard from "./components/Render";
 
 const Home: NextPage = () => {
   return (
