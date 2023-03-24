@@ -2,57 +2,87 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 
 const LogoRender = () => {
-  const [inputText, setInputText] = useState("");
-  const [numImages, setNumImages] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
+    const [inputText, setInputText] = useState("");
+    const [numImages, setNumImages] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
+    const [imageUrls, setImageUrls] = useState<string[]>([]);
 
-  useEffect(() => {
+    // modal
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedImageURL, setSelectedImageURL] = useState("");
+
+    const openModal = (imageURL: string) => {
+        setModalOpen(true);
+        setSelectedImageURL(imageURL);
+    };
+
+    const closeModal = () => {
+        setModalOpen(false);
+    };
+
+
+    useEffect(() => {
     const fetchImages = async () => {
-      const apiUrl = `https://pixabay.com/api/?key=34623498-875357acb06f0a2e0d4579a7f&q=nature&image_type=photo&per_page=5`;
-      const response = await fetch(apiUrl);
-      const imagesData = await response.json();
-      setImageUrls(imagesData.hits.map((image:any) => image.webformatURL));
+        const apiUrl = `https://pixabay.com/api/?key=34623498-875357acb06f0a2e0d4579a7f&q=nature&image_type=photo&per_page=5`;
+        const response = await fetch(apiUrl);
+        const imagesData = await response.json();
+        setImageUrls(imagesData.hits.map((image:any) => image.webformatURL));
     };
 
     fetchImages();
-  }, []);
+    }, []);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputText(event.target.value);
-  };
+    };
 
-  const handleNumImagesChange = (
+    const handleNumImagesChange = (
     event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+    ) => {
     setNumImages(Number(event.target.value));
-  };
+    };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
 
     try {
-      const response = await axios.post("/api/ai", {
+        const response = await axios.post("/api/ai", {
         prompt: "package",
         inputText: inputText,
         numImages: numImages,
-      });
+        });
 
-      const newImageUrls: string[] = response.data.imageUrls;
-      setImageUrls([...newImageUrls, ...imageUrls]);
+        const newImageUrls: string[] = response.data.imageUrls;
+        setImageUrls([...newImageUrls, ...imageUrls]);
     } catch (error) {
-      console.error(error);
+        console.error(error);
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
-  };
-  return (
-  <div className="flex min-h-fit mt-14">
-    <div className="w-full sm:w-1/3 bg-black p-8 rounded-xl">
-      <h2 className="text-white text-3xl font-bold mb-4 text-left">3D <span className=" text-amber-300">Package</span> Generation</h2>
+    };
+    return (
+    <div className="flex min-h-fit mt-14">
+        {modalOpen && (
+            <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 z-50 flex items-center justify-center">
+                    <img
+                    src={selectedImageURL}
+                    alt="Zoomed Stock Image"
+                    className="w-full h-auto max-h-screen p-4 object-contain"
+                    />
+                    <button
+                    className="absolute top-4 right-4 p-3 px-4 rounded-xl focus:outline-none border border-transparent cursor-pointer gradient-animation hover:outline"
+                    onClick={closeModal}
+                    >
+                    <span className="font-bold text-xl ">X</span>
+                    </button>
+                </div>
+            )}
 
-      <form onSubmit={handleSubmit} className="text-left">
+    <div className="w-full sm:w-1/3 bg-black p-8 rounded-xl">
+        <h2 className="text-white text-3xl font-bold mb-4 text-left">3D <span className=" text-amber-300">Package</span> Generation</h2>
+
+        <form onSubmit={handleSubmit} className="text-left">
         <div className="mb-4">
             <label htmlFor="input-text" className="  font-semibold text-white block mb-2">
             DESCRIBE YOUR PRODUCT
@@ -99,19 +129,20 @@ const LogoRender = () => {
 
     </div>
     <div className="w-full sm:w-2/3 p-4">
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {imageUrls.map((imageUrl, index) => (
-          <img
+            <img
             key={index}
             src={imageUrl}
             alt={`Stock Image ${index + 1}`}
-            className="w-full h-auto object-cover rounded-xl shadow-md"
-          />
+            className="w-full h-auto object-cover rounded-xl shadow-md cursor-pointer hover:brightness-125"
+            onClick={() => openModal(imageUrl)}
+            />
         ))}
-      </div>
+        </div>
     </div>
-  </div>
-);
+    </div>
+    );
 
 };
 

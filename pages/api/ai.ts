@@ -15,10 +15,10 @@ export default async function handler(
 
     let prompt;
     if (req.body.prompt === "logo") {
-        prompt = `Generate a unique and visually appealing 3d geometric shape suitable for e-commerce brand logos based on the user's description: ${req.body.inputText}. Ensure that the shapes are interesting, modern, and have space for text to be incorporated into the design. cinematic lighting, octane, 3d render, 4k, 8k, Relaxing:: Additive::0 --ar 16:9`;
+        prompt = `A 3D logo for ${req.body.inputText} with cinematic lighting, octane, 3d render, 4k, 8k, Relaxing:: Additive::0 --ar 16:9`;
 
     } else if (req.body.prompt === "package") {
-        prompt = `Create 3D hyperrealistic packaging renders for ${req.body.inputText} suitable for e-commerce product listings. octane, 3d render, 4k, 8k, Relaxing:: Additive::0 --ar 16:9`;
+        prompt = `A 3D mockup of packaging for ${req.body.inputText} with cinematic lighting, octane, 3d render, 4k, 8k, Relaxing:: Additive::0 --ar 16:9`;
     }
 
     try {
