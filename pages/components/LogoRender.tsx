@@ -63,20 +63,20 @@ const LogoRender = () => {
   return (
   <div className="flex min-h-screen">
     {modalOpen && (
-            <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 z-50 flex items-center justify-center">
-                    <img
-                    src={selectedImageURL}
-                    alt="Zoomed Stock Image"
-                    className="w-full h-auto max-h-screen p-4 object-contain"
-                    />
-                    <button
-                    className="absolute top-4 right-4 p-3 px-4 rounded-xl focus:outline-none border border-transparent cursor-pointer gradient-animation hover:outline"
-                    onClick={closeModal}
-                    >
-                    <span className="font-bold text-xl ">X</span>
-                    </button>
-                </div>
-            )}
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 z-50 flex items-center justify-center">
+                <img
+                src={selectedImageURL}
+                alt="Zoomed Stock Image"
+                className="w-full h-auto max-h-screen p-4 object-contain"
+                />
+                <button
+                className="absolute top-4 right-4 p-3 px-4 rounded-xl focus:outline-none border border-transparent cursor-pointer gradient-animation hover:outline"
+                onClick={closeModal}
+                >
+                <span className="font-bold text-xl ">X</span>
+                </button>
+        </div>
+    )}
     <div className="w-full sm:w-1/3 bg-black p-8 rounded-xl">
       <h2 className="text-white text-3xl font-bold mb-4 text-left">3D <span className=" text-amber-300">Logo</span> Generation</h2>
 
