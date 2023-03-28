@@ -1,14 +1,32 @@
 import { useState, useRef, useEffect } from "react";
 import CanvasDraw from "react-canvas-draw";
 import axios from "axios";
-import { text } from "node:stream/consumers";
 
-const EditingModal = ({ imageURL, closeModal }: any) => {
+interface EditingModalProps {
+  imageURL: string;
+  closeModal: () => void;
+}
+
+const EditingModal = ({ imageURL, closeModal }: EditingModalProps) => {
   const [textInputValue, setTextInputValue] = useState("");
   const [imageDimensions, setImageDimensions] = useState({
     width: 0,
     height: 0,
   });
+
+  const [currentImageUrl, setCurrentImageUrl] = useState(imageURL);
+
+  useEffect(() => {
+    setCurrentImageUrl(imageURL);
+  }, [imageURL]);
+
+  useEffect(() => {
+    if (imageDimensions.width !== 0 && imageDimensions.height !== 0) {
+      canvasRef.current.width = imageDimensions.width;
+      canvasRef.current.height = imageDimensions.height;
+    }
+  }, [imageDimensions]);
+
   const canvasRef = useRef<any>(null);
 
   const handleTextInputChange = (
@@ -22,6 +40,7 @@ const EditingModal = ({ imageURL, closeModal }: any) => {
     // Do something with the text input value here
     // console.log("Text input value:", textInputValue);
     handleSaveMask();
+    // closeModal();
     // closeModal();
   };
 
@@ -51,7 +70,7 @@ const EditingModal = ({ imageURL, closeModal }: any) => {
   const handleSubmitMask = async () => {
     const canvas = canvasRef.current.canvas.drawing;
     const maskImage = canvas.toDataURL("image/png");
-    const originalImage = await imageUrlToBase64(imageURL);
+    const originalImage = await imageUrlToBase64(currentImageUrl);
     // const response = await axios.post("/api/ai", {
     // });
 
@@ -61,8 +80,8 @@ const EditingModal = ({ imageURL, closeModal }: any) => {
 
     const requestBody = {
       prompt: textInputValue,
-      originalImage: originalImage,
-      maskImage: maskImage,
+      image: originalImage,
+      mask: maskImage,
     };
 
     const response = await axios
@@ -76,6 +95,7 @@ const EditingModal = ({ imageURL, closeModal }: any) => {
   };
 
   async function imageUrlToBase64(imageUrl: string): Promise<string> {
+    console.log("Image URL:", imageUrl);
     const response = await fetch(imageUrl);
     const blob = await response.blob();
     return new Promise<string>((resolve, reject) => {
@@ -88,13 +108,6 @@ const EditingModal = ({ imageURL, closeModal }: any) => {
       reader.onerror = reject;
     });
   }
-
-  useEffect(() => {
-    if (imageDimensions.width !== 0 && imageDimensions.height !== 0) {
-      canvasRef.current.width = imageDimensions.width;
-      canvasRef.current.height = imageDimensions.height;
-    }
-  }, [imageDimensions]);
 
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -128,9 +141,9 @@ const EditingModal = ({ imageURL, closeModal }: any) => {
             </div>
             <div className="relative h-96">
               <img
-                src={imageURL}
+                src={currentImageUrl}
                 alt="Editing image"
-                className="absolute inset-0 w-full h-full object-contain"
+                className="absolute inset-0 w-full h-full object-contain z-0"
                 onLoad={handleImageLoad}
               />
               {imageDimensions.width && imageDimensions.height && (
@@ -141,7 +154,8 @@ const EditingModal = ({ imageURL, closeModal }: any) => {
                     hideGrid={true}
                     ref={canvasRef}
                     style={{ pointerEvents: "auto" }}
-                    imgSrc={imageURL}
+                    imgSrc={currentImageUrl}
+                    backgroundColor="transparent"
                   />
                 </div>
               )}
