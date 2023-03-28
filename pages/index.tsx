@@ -17,7 +17,7 @@ const Home: NextPage = () => {
         </Head>
         <main className="flex flex-col items-center justify-center w-full flex-1 text-center">
           <PackageRender />
-          <hr className="border-4 border-neutral-800 w-full m-3" />
+          <div className="m-5 w-full border-neutral-700 border-4" />
           <LogoRender />
         </main>
         <Footer />

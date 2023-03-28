@@ -63,7 +63,13 @@ const LogoRender = () => {
   };
   return (
     <div className="flex min-h-fit mt-14">
-      {modalOpen && <EditingModal imageURL={selectedImageURL} />}
+      {modalOpen && (
+        <EditingModal
+          imageURL={selectedImageURL}
+          propIsVisible={modalOpen}
+          onClose={closeModal}
+        />
+      )}
 
       <div className="w-full sm:w-1/3 bg-black p-8 rounded-xl">
         <h2 className="text-white text-3xl font-bold mb-4 text-left">
